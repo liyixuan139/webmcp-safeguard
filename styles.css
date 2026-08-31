@@ -543,6 +543,13 @@ code {
 }
 .rule-form__input { width: 7.5rem; }
 
+.mandate__tools {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.85rem;
+}
+
 /* ---------- Consent dialog ---------- */
 .modal {
   position: fixed;
@@ -701,6 +708,13 @@ code {
   padding: 0 2rem 2.5rem;
   color: var(--text-faint);
   font-size: 0.8rem;
+}
+
+.site-footer__capability {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
 }
 
 /* ---------- Flash feedback ---------- */

@@ -65,6 +65,7 @@ async function init() {
   wireAttackButtons();
   wireDefendButtons();
   wireMandateForm();
+  wireMandateIO();
   wireLogClear();
   wireDemoButton();
 }
@@ -89,7 +90,27 @@ function renderStatus() {
     pill.classList.add('status-pill--sim');
     text.textContent = `WebMCP shim · ${TOOLS.length} tools`;
   }
-  modeEl.textContent = webmcp.isLive ? 'Live API' : 'Simulation';
+  modeEl.textContent = webmcp.isLive
+    ? (webmcp.testing ? 'Live API · test harness' : 'Live API')
+    : 'Simulation';
+  renderCapability();
+}
+
+// Describe exactly how tools are registered, for the footer. This is the one
+// line that tells a visitor whether they're looking at the real WebMCP API or
+// the local shim.
+async function renderCapability() {
+  const el = $('#webmcp-capability');
+  if (!el) return;
+  if (webmcp.isLive) {
+    const tools = await webmcp.listBrowserTools();
+    const names = Array.isArray(tools) && tools.length
+      ? tools.map((t) => (t && t.name) || t).join(' · ')
+      : `${TOOLS.length} tools`;
+    el.textContent = `✓ WebMCP live — ${names} registered with document.modelContext`;
+  } else {
+    el.textContent = `WebMCP not detected — ${TOOLS.length} tools registered in a local shim (works in any browser)`;
+  }
 }
 
 // --- Café state ------------------------------------------------
@@ -147,14 +168,20 @@ function showConsent(description, opts = {}) {
 
     const onAllow = () => settle(true);
     const onDeny = () => settle(false);
+    const onKey = (e) => { if (e.key === 'Escape') settle(false); };
 
     allowBtn.addEventListener('click', onAllow);
     denyBtn.addEventListener('click', onDeny);
+    document.addEventListener('keydown', onKey);
+
+    // Focus the primary action so the dialog is keyboard-operable.
+    allowBtn.focus();
 
     function settle(value) {
       dialog.hidden = true;
       allowBtn.removeEventListener('click', onAllow);
       denyBtn.removeEventListener('click', onDeny);
+      document.removeEventListener('keydown', onKey);
       consentSettle = null;
       resolve(value);
     }
@@ -397,6 +424,44 @@ function wireMandateForm() {
     Mandate.addRule({ action, mode, limit });
     limitInput.value = '';
     renderRules();
+  });
+}
+
+// Export / import the mandate as a portable policy. This is the concrete
+// artifact that could be shipped to the browser/agent layer — the point of the
+// whole demo: the mandate is data, not UI.
+function wireMandateIO() {
+  $('#mandate-export').addEventListener('click', () => {
+    const json = JSON.stringify(Mandate.getRules(), null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'safeguard-mandate.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  const fileInput = $('#mandate-import-file');
+  $('#mandate-import').addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const rules = JSON.parse(reader.result);
+        if (!Array.isArray(rules)) throw new Error('expected a JSON array of rules');
+        Mandate.setRules(rules);
+        renderRules();
+      } catch (err) {
+        showError(`mandate import failed: ${err.message}`);
+      }
+    };
+    reader.readAsText(file);
+    fileInput.value = '';
   });
 }
 

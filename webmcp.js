@@ -25,8 +25,8 @@ const webmcp = (() => {
     (typeof document !== 'undefined' && document.modelContext) ||
     (typeof navigator !== 'undefined' && navigator.modelContext);
 
-  const hasTesting =
-    typeof navigator !== 'undefined' && 'modelContextTesting' in navigator;
+  const testing =
+    (typeof navigator !== 'undefined' && navigator.modelContextTesting) || null;
 
   const mode =
     modelContext && typeof modelContext.registerTool === 'function'
@@ -82,10 +82,24 @@ const webmcp = (() => {
     return tool.execute(args);
   }
 
+  // Ask the browser's own test harness what it has registered. Returns null
+  // when the surface isn't available (shim mode, or no testing flag).
+  async function listBrowserTools() {
+    if (testing && typeof testing.listTools === 'function') {
+      try {
+        return await testing.listTools();
+      } catch (err) {
+        console.warn('[webmcp] listTools() failed:', err);
+      }
+    }
+    return null;
+  }
+
   return {
     mode, // 'live' | 'shim'
     isLive: mode === 'live',
-    hasTesting,
+    testing: !!testing,
+    listBrowserTools,
     registerTool,
     registerTools,
     listTools,

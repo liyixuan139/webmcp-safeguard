@@ -14,6 +14,7 @@
   <!-- <meta http-equiv="origin-trial" content="PASTE_YOUR_ORIGIN_TRIAL_TOKEN_HERE" /> -->
   <title>SafeGuard — Break WebMCP consent, then fix it with a mandate</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 </head>
 <body>
   <!-- ============================================================= -->
@@ -214,6 +215,12 @@
           />
           <button type="submit" class="btn btn--ghost">Add rule</button>
         </form>
+
+        <div class="mandate__tools">
+          <button id="mandate-export" class="btn btn--ghost btn--sm" type="button">Export JSON</button>
+          <button id="mandate-import" class="btn btn--ghost btn--sm" type="button">Import JSON</button>
+          <input id="mandate-import-file" type="file" accept="application/json" hidden />
+        </div>
       </div>
 
       <!-- Defence scenario runner -->
@@ -333,6 +340,7 @@
       <code>document.modelContext</code> when available; otherwise running on a local
       simulation shim so the demo works in any browser.
     </p>
+    <p id="webmcp-capability" class="site-footer__capability"></p>
   </footer>
 
   <!-- Reusable consent dialog modal (simulated consent surface) -->

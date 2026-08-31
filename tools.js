@@ -88,7 +88,7 @@ const TOOLS = [
     },
     annotations: { readOnlyHint: false },
     async execute(input) {
-      const amount = Number(input.amount) || 0;
+      const amount = Math.max(0, Number(input.amount) || 0);
       const res = Effects.apply({ action: 'donate', amount });
       return { content: [{ type: 'text', text: res.summary }], effects: [res] };
     },
