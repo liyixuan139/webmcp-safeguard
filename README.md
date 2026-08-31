@@ -137,6 +137,19 @@ itself can be the attacker.
 
 ---
 
+## Why there is no backend
+
+Deliberately. WebMCP tools are defined in the page itself —
+`document.modelContext.registerTool({ … execute() { … } })` — and an agent calls
+that in-page `execute()` directly; the standard has no server round-trip. SafeGuard
+keeps the café state and the mandate in the browser for the same reason: the
+capability boundary (`Effects.apply()` + the `Mandate`) is the entire subject, and
+it is clearest when nothing can hide behind a server. This is a security
+demonstration, not a production café — in-memory state and client-side enforcement
+are an intentional trade-off, not a shortcut.
+
+---
+
 ## Project structure
 
 | File | Purpose |

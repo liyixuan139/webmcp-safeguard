@@ -82,6 +82,13 @@ checks the *effect primitive* (`{ action: 'change_email' }`), not the tool's
 human-authored description. That is why a swapped or read-only-lying tool is
 caught just like a blatant one.
 
+There is deliberately no backend. WebMCP tools live in the page
+(`document.modelContext.registerTool`), and an agent calls their in-page
+`execute()` directly — the standard has no server round-trip. State and the
+mandate stay in the browser so the capability boundary is the whole, readable
+subject. This is a security demonstration, not a production app: in-memory state
+and client-side enforcement are an intentional trade-off.
+
 ## Demo
 
 Live URL: <https://webmcp-safeguard.netlify.app>
