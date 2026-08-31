@@ -1,15 +1,2 @@
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Node (in case a build step / CLI is ever added)
-node_modules/
-
-# Netlify CLI local artifacts
-.netlify/
-
-# Env / secrets
-.env
-.env.*
-!.env.example
+# Video production intermediates (narration audio, temp scripts)
+build/
