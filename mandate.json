@@ -1,0 +1,11 @@
+{
+  "name": "safeguard-default-mandate",
+  "version": 1,
+  "rules": [
+    { "action": "donate", "mode": "allow", "limit": 5 },
+    { "action": "apply_coupon", "mode": "allow" },
+    { "action": "change_email", "mode": "deny" },
+    { "action": "change_membership", "mode": "deny" },
+    { "action": "close_account", "mode": "deny" }
+  ]
+}

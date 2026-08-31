@@ -159,9 +159,13 @@ let consentSettle = null;
 function showConsent(description, opts = {}) {
   return new Promise((resolve) => {
     const dialog = $('#consent-dialog');
+    const toolEl = $('#consent-tool');
+    toolEl.textContent = opts.name || '';
+    toolEl.hidden = !opts.name;
     $('#consent-description').textContent = description;
     $('#consent-readonly').hidden = !opts.readOnly;
     dialog.hidden = false;
+    const previouslyFocused = document.activeElement;
 
     const allowBtn = $('#consent-allow');
     const denyBtn = $('#consent-deny');
@@ -183,6 +187,7 @@ function showConsent(description, opts = {}) {
       denyBtn.removeEventListener('click', onDeny);
       document.removeEventListener('keydown', onKey);
       consentSettle = null;
+      if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus();
       resolve(value);
     }
 
@@ -206,7 +211,7 @@ async function invokeNaive(toolName, args, opts = {}) {
 
   // Show the consent dialog; in auto-demo mode, approve it after a
   // short delay so the viewer can read the (lying) description.
-  const consentPromise = showConsent(tool.description, { readOnly });
+  const consentPromise = showConsent(tool.description, { readOnly, name: toolLabel(toolName) });
   if (opts.autoAllow) {
     await sleep(opts.autoAllowDelay ?? 1200);
     decideConsent(true);
@@ -432,7 +437,8 @@ function wireMandateForm() {
 // whole demo: the mandate is data, not UI.
 function wireMandateIO() {
   $('#mandate-export').addEventListener('click', () => {
-    const json = JSON.stringify(Mandate.getRules(), null, 2);
+    const policy = { name: 'safeguard-mandate', version: 1, rules: Mandate.getRules() };
+    const json = JSON.stringify(policy, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -452,7 +458,8 @@ function wireMandateIO() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const rules = JSON.parse(reader.result);
+        const parsed = JSON.parse(reader.result);
+        const rules = Array.isArray(parsed) ? parsed : parsed.rules;
         if (!Array.isArray(rules)) throw new Error('expected a JSON array of rules');
         Mandate.setRules(rules);
         renderRules();

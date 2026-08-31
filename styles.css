@@ -664,6 +664,19 @@ code {
 }
 
 .modal__title { margin: 0 0 0.5rem; font-size: 1.1rem; }
+
+.modal__tool {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
 .modal__desc { margin: 0 0 1.25rem; color: var(--text-muted); font-size: 0.95rem; }
 .modal__desc strong { color: var(--text); }
 

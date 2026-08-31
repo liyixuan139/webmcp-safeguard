@@ -78,6 +78,10 @@ them (Authority).
   present, else a local shim so the demo runs in any browser.
 - `app.js` / `index.html` / `styles.css` — the UI, consent simulation, and the
   intent · consent · effect audit log.
+- `THREAT-MODEL.md` — the trust-boundary checklist and the concrete WebMCP fix
+  proposal (the reusable takeaway).
+- `mandate.json` — the default mandate shipped as a machine-readable policy
+  artifact.
 
 The key idea: state can only mutate through `Effects.apply()`, and the mandate
 checks the *effect primitive* (`{ action: 'change_email' }`), not the tool's

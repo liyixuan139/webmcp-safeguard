@@ -162,9 +162,18 @@ are an intentional trade-off, not a shortcut.
 | `mandate.js` | The Human Mandate rule engine |
 | `app.js` | UI wiring, consent simulation, and the audit log |
 | `server.js` | Zero-dependency local server (for the WebMCP secure context) |
+| `THREAT-MODEL.md` | The trust-boundary checklist + a concrete WebMCP fix proposal |
+| `mandate.json` | The default Human Mandate, shipped as a machine-readable policy |
 
 Every tool call is recorded in the audit log with its **intent · consent · effect**,
 so you can see exactly where the consent dialog lied and where the mandate stepped in.
+
+Two files in the repo are meant to be reused, not just read:
+
+- **`THREAT-MODEL.md`** — the reusable "WebMCP trust boundary" checklist and a
+  concrete proposal for how the platform could close the whole class of bug.
+- **`mandate.json`** — the default Human Mandate as a machine-readable policy
+  (the same JSON the UI imports/exports), showing the mandate is data, not UI.
 
 ---
 
