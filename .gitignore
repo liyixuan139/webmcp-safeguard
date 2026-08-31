@@ -1,2 +1,5 @@
 # Video production intermediates (narration audio, temp scripts)
 build/
+
+# Netlify CLI local state (site id, generated config) — not part of the project
+.netlify/
