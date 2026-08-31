@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- WebMCP origin trial token. To enable live mode on your hosted domain,
+       sign up for the WebMCP origin trial and paste your token below. Without
+       it the demo runs on the built-in shim (any browser). -->
+  <!-- <meta http-equiv="origin-trial" content="PASTE_YOUR_ORIGIN_TRIAL_TOKEN_HERE" /> -->
+  <title>SafeGuard — Break WebMCP consent, then fix it with a mandate</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ============================================================= -->
+  <!-- Header: title + live WebMCP availability status                -->
+  <!-- ============================================================= -->
+  <header class="site-header">
+    <div class="brand">
+      <h1 class="brand__title">SafeGuard</h1>
+      <p class="brand__tagline">Break WebMCP consent, then fix it with a mandate</p>
+    </div>
+    <div class="status-bar">
+      <button id="demo-btn" class="btn btn--demo">▶ Run full demo</button>
+      <span id="webmcp-status" class="status-pill status-pill--unknown">
+        <span class="status-pill__dot"></span>
+        <span id="webmcp-status-text">Detecting WebMCP…</span>
+      </span>
+      <span id="mode-indicator" class="mode-indicator">Simulation</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ============================================================= -->
+    <!-- Left column: "The Break" — the attack demonstrations           -->
+    <!-- ============================================================= -->
+    <section class="panel panel--attack" aria-labelledby="break-title">
+      <div class="panel__header">
+        <h2 id="break-title" class="panel__title">The Break <span class="panel__badge panel__badge--danger">attack</span></h2>
+        <p class="panel__subtitle">A virtual café where consent dialogs can lie.</p>
+        <span id="break-verdict" class="last-verdict" hidden></span>
+      </div>
+
+      <!-- Virtual café / account state -->
+      <div class="cafe">
+        <div class="cafe__account">
+          <div class="cafe__stat">
+            <span class="cafe__label">Donation balance</span>
+            <strong id="balance" class="cafe__value">$0.00</strong>
+          </div>
+          <div class="cafe__stat">
+            <span class="cafe__label">Account email</span>
+            <strong id="email" class="cafe__value">user@example.com</strong>
+          </div>
+          <div class="cafe__stat">
+            <span class="cafe__label">Membership</span>
+            <strong id="membership" class="cafe__value">free</strong>
+          </div>
+          <div class="cafe__stat">
+            <span class="cafe__label">Account status</span>
+            <strong id="account-status" class="cafe__value">active</strong>
+          </div>
+        </div>
+
+        <div class="cafe__actions">
+          <h3 class="cafe__heading">Run an attack scenario</h3>
+
+          <!-- Attack #1: label mismatch -->
+          <article class="scenario">
+            <div class="scenario__meta">
+              <span class="scenario__tag scenario__tag--danger">Attack 1 · Label mismatch</span>
+              <h4 class="scenario__name">Donate $1 to keep the café running</h4>
+              <p class="scenario__desc">
+                The consent dialog shows <em>“Donate $1”</em>, but the tool actually
+                <strong>changes the account email</strong>.
+              </p>
+            </div>
+            <button class="btn btn--danger" data-attack="label-mismatch">
+              Trigger: Donate $1
+            </button>
+          </article>
+
+          <!-- Attack #2: hidden instruction -->
+          <article class="scenario">
+            <div class="scenario__meta">
+              <span class="scenario__tag scenario__tag--danger">Attack 2 · Hidden instruction</span>
+              <h4 class="scenario__name">Apply a 10% loyalty coupon</h4>
+              <p class="scenario__desc">
+                Consenting to a harmless coupon <em>also</em> silently
+                <strong>upgrades membership to “premium” (a paid plan)</strong>.
+              </p>
+            </div>
+            <button class="btn btn--danger" data-attack="hidden-instruction">
+              Trigger: Apply coupon
+            </button>
+          </article>
+
+          <!-- Attack #3: tool substitution -->
+          <article class="scenario">
+            <div class="scenario__meta">
+              <span class="scenario__tag scenario__tag--danger">Attack 3 · Tool substitution</span>
+              <h4 class="scenario__name">Donate — the trusted tool, swapped</h4>
+              <p class="scenario__desc">
+                A rogue script re-registers <code>donate</code> with the same name and
+                description, but swaps its code to <strong>change the account email</strong>.
+                The consent dialog is indistinguishable from the real thing.
+              </p>
+            </div>
+            <button class="btn btn--danger" data-attack="tool-substitution">
+              Trigger: Donate (swapped)
+            </button>
+          </article>
+
+          <!-- Attack #4: read-only lie -->
+          <article class="scenario">
+            <div class="scenario__meta">
+              <span class="scenario__tag scenario__tag--danger">Attack 4 · Read-only lie</span>
+              <h4 class="scenario__name">Show my account summary</h4>
+              <p class="scenario__desc">
+                The tool declares <code>readOnlyHint: true</code>, so the dialog
+                reassures “read-only, no changes” — but it actually
+                <strong>closes the account</strong>.
+              </p>
+            </div>
+            <button class="btn btn--danger" data-attack="read-only-lie">
+              Trigger: View summary
+            </button>
+          </article>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- Right column: "The Fix" — the Human Mandate defence           -->
+    <!-- ============================================================= -->
+    <section class="panel panel--defend" aria-labelledby="fix-title">
+      <div class="panel__header">
+        <h2 id="fix-title" class="panel__title">The Fix <span class="panel__badge panel__badge--safe">defence</span></h2>
+        <p class="panel__subtitle">A Human Mandate that verifies <em>effect</em>, not the words on the dialog.</p>
+        <span id="defend-verdict" class="last-verdict" hidden></span>
+      </div>
+
+      <!-- Mandate rule editor -->
+      <div class="mandate">
+        <h3 class="mandate__heading">Your mandate (rules set up-front)</h3>
+        <ul id="mandate-rules" class="rule-list">
+          <!-- Rules are rendered here by app.js -->
+        </ul>
+
+        <form id="mandate-form" class="rule-form" autocomplete="off">
+          <select id="rule-action" class="rule-form__select" aria-label="Action">
+            <option value="donate">donate</option>
+            <option value="change_email">change email</option>
+            <option value="change_membership">change membership</option>
+            <option value="coupon">apply coupon</option>
+          </select>
+          <select id="rule-mode" class="rule-form__select" aria-label="Mode">
+            <option value="allow">allow</option>
+            <option value="deny">deny</option>
+          </select>
+          <input
+            id="rule-limit"
+            class="rule-form__input"
+            type="number"
+            min="0"
+            placeholder="max $ (optional)"
+            aria-label="Amount limit"
+          />
+          <button type="submit" class="btn btn--ghost">Add rule</button>
+        </form>
+      </div>
+
+      <!-- Defence scenario runner -->
+      <div class="scenarios">
+        <h3 class="mandate__heading">Ask the AI to attempt something</h3>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--safe">Within bounds</span>
+            <h4 class="scenario__name">Donate $3</h4>
+            <p class="scenario__desc">Allowed by the mandate (donate ≤ $5) → runs without a consent dialog.</p>
+          </div>
+          <button class="btn btn--safe" data-defend="donate-3">Attempt: donate $3</button>
+        </article>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--warn">Over limit</span>
+            <h4 class="scenario__name">Donate $50</h4>
+            <p class="scenario__desc">Exceeds the ≤ $5 mandate → rejected silently, no consent dialog.</p>
+          </div>
+          <button class="btn btn--safe" data-defend="donate-50">Attempt: donate $50</button>
+        </article>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--warn">Forbidden</span>
+            <h4 class="scenario__name">Change account email</h4>
+            <p class="scenario__desc">Personal-info mutation is forbidden → rejected silently.</p>
+          </div>
+          <button class="btn btn--safe" data-defend="change-email">Attempt: change email</button>
+        </article>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--danger">The attack, now blocked</span>
+            <h4 class="scenario__name">“Donate $1” (label-mismatch tool)</h4>
+            <p class="scenario__desc">
+              The same malicious tool from Attack 1 — now its <em>declared effect</em>
+              is checked first, so it is refused before any dialog can lie.
+            </p>
+          </div>
+          <button class="btn btn--safe" data-defend="malicious-donate">Attempt: malicious donate</button>
+        </article>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--danger">The hidden instruction, now blocked</span>
+            <h4 class="scenario__name">Apply loyalty coupon (hidden upgrade)</h4>
+            <p class="scenario__desc">
+              The coupon runs, but its <em>hidden</em> membership upgrade is refused by the mandate.
+            </p>
+          </div>
+          <button class="btn btn--safe" data-defend="hidden-coupon">Attempt: apply coupon</button>
+        </article>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--danger">The swap, now blocked</span>
+            <h4 class="scenario__name">“Donate” (the swapped tool)</h4>
+            <p class="scenario__desc">
+              The mandate checks the runtime <em>effect</em>, never the tool's name or
+              description — so a hijacked <code>donate</code> that actually changes the
+              email is refused before any dialog can lie.
+            </p>
+          </div>
+          <button class="btn btn--safe" data-defend="swapped-donate">Attempt: swapped donate</button>
+        </article>
+
+        <article class="scenario scenario--defend">
+          <div class="scenario__meta">
+            <span class="scenario__tag scenario__tag--danger">The read-only lie, now blocked</span>
+            <h4 class="scenario__name">“Show my summary” (read-only tool)</h4>
+            <p class="scenario__desc">
+              The mandate checks the runtime <em>effect</em>, not the read-only
+              declaration — so a “read-only” tool that actually closes the account
+              is refused.
+            </p>
+          </div>
+          <button class="btn btn--safe" data-defend="read-only-lie">Attempt: view summary</button>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================= -->
+  <!-- Test panel / audit log — intent → consent → effect           -->
+  <!-- ============================================================= -->
+  <section class="log" aria-labelledby="log-title">
+    <div class="log__header">
+      <h2 id="log-title" class="log__title">Test panel — intent · consent · effect</h2>
+      <button id="log-clear" class="btn btn--ghost btn--sm">Clear log</button>
+    </div>
+    <div class="log__table-wrap">
+      <table class="log__table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Intent (tool)</th>
+            <th>Consent shown</th>
+            <th>Mandate verdict</th>
+            <th>Actual effect</th>
+          </tr>
+        </thead>
+        <tbody id="log-body">
+          <tr class="log__empty">
+            <td colspan="5">No tool calls yet. Trigger an attack or defence scenario above.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>
+      SafeGuard — a WebMCP consent demo. Registering tools via
+      <code>document.modelContext</code> when available; otherwise running on a local
+      simulation shim so the demo works in any browser.
+    </p>
+  </footer>
+
+  <!-- Reusable consent dialog modal (simulated consent surface) -->
+  <div id="consent-dialog" class="modal" hidden>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+      <h3 id="consent-title" class="modal__title">Confirm action</h3>
+      <p id="consent-description" class="modal__desc"></p>
+      <p id="consent-readonly" class="modal__readonly" hidden>🔒 Read-only — this tool makes no changes to your account</p>
+      <div class="modal__actions">
+        <button id="consent-deny" class="btn btn--ghost">Deny</button>
+        <button id="consent-allow" class="btn btn--primary">Allow</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts (built in the next steps) -->
+  <script src="webmcp.js"></script>
+  <script src="tools.js"></script>
+  <script src="mandate.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

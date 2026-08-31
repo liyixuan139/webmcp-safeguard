@@ -1,0 +1,7 @@
+# Netlify build configuration for SafeGuard.
+#
+# SafeGuard is a static site (plain HTML/CSS/JS, no build step), so the only
+# thing Netlify needs to know is where the publishable files live: the root.
+
+[build]
+  publish = "."
