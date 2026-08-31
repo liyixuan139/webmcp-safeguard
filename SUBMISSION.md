@@ -1,14 +1,16 @@
 # SafeGuard — WebMCP Challenge Submission
 
-**One-liner:** SafeGuard breaks WebMCP's consent dialog with four real attacks,
-then fixes it with a "Human Mandate" that verifies what a tool *does*, not what
-its dialog *says*.
+**One-liner:** SafeGuard shows that every signal a WebMCP page declares about its
+tools — the `name`, the `description`, even the `readOnlyHint` — can lie, then
+fixes it with a "Human Mandate" that trusts only the runtime effect.
 
 ## What it is
 
 SafeGuard is a self-contained browser demo that registers tools through
-`document.modelContext` and shows how WebMCP's consent surface can be made to
-lie — then shows a guardrail that makes it honest.
+`document.modelContext` and shows that the consent surface is built on signals
+the page itself declares — and that all of them can lie. It maps each attack to
+the specific signal it corrupts, then shows one guardrail that makes the whole
+surface honest by trusting only what actually runs.
 
 A virtual café exposes six tools. The "Break" side demonstrates four attacks:
 

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="SafeGuard breaks WebMCP's consent dialog with four real attacks, then fixes it with a Human Mandate that verifies what a tool does — not what it says." />
-  <meta property="og:title" content="SafeGuard — Break WebMCP consent, then fix it with a mandate" />
-  <meta property="og:description" content="Four real WebMCP consent attacks, and a Human Mandate that verifies runtime effects instead of trusting tool descriptions." />
+  <meta name="description" content="SafeGuard shows that every WebMCP signal a page declares — name, description, readOnlyHint — can lie, and fixes it with a Human Mandate that verifies runtime effects." />
+  <meta property="og:title" content="SafeGuard — Every signal a page declares can lie" />
+  <meta property="og:description" content="Four real WebMCP consent attacks, and a Human Mandate that trusts only the runtime effect — never what a page claims." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://webmcp-safeguard.netlify.app" />
   <!-- WebMCP origin trial token. To enable live mode on your hosted domain,
@@ -50,28 +50,64 @@
   <!-- ============================================================= -->
   <section class="hero">
     <div class="hero__inner">
-      <p class="hero__kicker">WebMCP consent · attack surface · fix</p>
-      <h2 class="hero__title">A consent dialog <em>can lie</em>.</h2>
+      <p class="hero__kicker">WebMCP trust boundary · attack surface · fix</p>
+      <h2 class="hero__title">Every signal a page declares <em>can lie</em>.</h2>
       <p class="hero__subtitle">
-        SafeGuard registers tools through <code>document.modelContext</code>, breaks the
-        consent dialog with four real attacks, then fixes it with a Human Mandate that
-        verifies what a tool <em>does</em> — never what it <em>says</em>.
+        SafeGuard registers tools through <code>document.modelContext</code> and shows
+        how <em>everything</em> a page declares about its tools — the name, the
+        description, even the <code>readOnlyHint</code> — is attacker-controlled. The
+        Human Mandate closes the gap by trusting only what actually runs.
       </p>
-      <div class="hero__flow" aria-label="Intent to Authority to Effect">
-        <div class="flow-node">
-          <span class="flow-node__step">Intent</span>
-          <span class="flow-node__sub">the human grants bounded authority up-front</span>
+      <div class="hero__trust" aria-label="The WebMCP trust boundary">
+        <div class="trust-col trust-col--lie">
+          <span class="trust-col__label">Page-declared · can lie</span>
+          <span class="trust-col__items"><code>name</code> · <code>description</code> · <code>readOnlyHint</code></span>
         </div>
-        <span class="flow-arrow" aria-hidden="true">→</span>
-        <div class="flow-node">
-          <span class="flow-node__step">Authority</span>
-          <span class="flow-node__sub">the mandate checks every runtime effect</span>
+        <span class="trust-arrow" aria-hidden="true">→</span>
+        <div class="trust-col trust-col--truth">
+          <span class="trust-col__label">Runtime effect · checked</span>
+          <span class="trust-col__items"><code>{ action }</code> via <code>Effects.apply()</code></span>
         </div>
-        <span class="flow-arrow" aria-hidden="true">→</span>
-        <div class="flow-node">
-          <span class="flow-node__step">Effect</span>
-          <span class="flow-node__sub">state mutates only within bounds</span>
-        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- The WebMCP trust boundary — the reusable framework           -->
+  <!-- ============================================================= -->
+  <section class="trust-boundary" aria-labelledby="trust-title">
+    <div class="trust-boundary__header">
+      <h2 id="trust-title" class="trust-boundary__title">The WebMCP trust boundary</h2>
+      <p class="trust-boundary__subtitle">
+        Each attack exploits one signal a page declares; the mandate counters it by
+        trusting the runtime effect instead of the claim.
+      </p>
+    </div>
+    <div class="trust-table" role="table" aria-label="Attacks, lying signals, and runtime checks">
+      <div class="trust-row trust-row--head" role="row">
+        <span role="columnheader">Attack</span>
+        <span role="columnheader">Declared signal (lies)</span>
+        <span role="columnheader">Runtime check (the fix)</span>
+      </div>
+      <div class="trust-row" role="row">
+        <span class="trust-cell trust-cell--attack">Label mismatch</span>
+        <span class="trust-cell"><code>description</code></span>
+        <span class="trust-cell">verify the <code>effect</code>, not the copy</span>
+      </div>
+      <div class="trust-row" role="row">
+        <span class="trust-cell trust-cell--attack">Hidden instruction</span>
+        <span class="trust-cell">an undeclared second <code>effect</code></span>
+        <span class="trust-cell">check every effect, not just the first</span>
+      </div>
+      <div class="trust-row" role="row">
+        <span class="trust-cell trust-cell--attack">Tool substitution</span>
+        <span class="trust-cell"><code>name</code> + copied <code>description</code></span>
+        <span class="trust-cell">check the runtime behaviour, not the name</span>
+      </div>
+      <div class="trust-row" role="row">
+        <span class="trust-cell trust-cell--attack">Read-only lie</span>
+        <span class="trust-cell"><code>readOnlyHint</code></span>
+        <span class="trust-cell">ignore the hint, check for writes</span>
       </div>
     </div>
   </section>

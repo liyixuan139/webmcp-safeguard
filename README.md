@@ -10,7 +10,8 @@ verifying what a tool *actually does*, not what its dialog *says*.
 
 ## The thesis
 
-> A consent dialog that renders a human-authored `description` is a dialog that can lie.
+> Every signal a page declares about its tools — the name, the description, even the
+> `readOnlyHint` — is attacker-controlled. Only what actually runs can be checked.
 
 WebMCP lets a web page register "tools" that AI agents can call, via
 `document.modelContext`:
