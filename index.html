@@ -16,8 +16,18 @@
   <!-- ============================================================= -->
   <header class="site-header">
     <div class="brand">
-      <h1 class="brand__title">SafeGuard</h1>
-      <p class="brand__tagline">Break WebMCP consent, then fix it with a mandate</p>
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.5 4.5 5.25v6c0 4.5 3.2 8 7.5 10.25 4.3-2.25 7.5-5.75 7.5-10.25v-6L12 2.5Z"
+                stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="m8.75 11.75 2.25 2.25 4.25-4.5"
+                stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <div class="brand__text">
+        <h1 class="brand__title">SafeGuard</h1>
+        <p class="brand__tagline">Break WebMCP consent, then fix it with a mandate</p>
+      </div>
     </div>
     <div class="status-bar">
       <button id="demo-btn" class="btn btn--demo">▶ Run full demo</button>
@@ -28,6 +38,37 @@
       <span id="mode-indicator" class="mode-indicator">Simulation</span>
     </div>
   </header>
+
+  <!-- ============================================================= -->
+  <!-- Hero: the thesis in one screen                                -->
+  <!-- ============================================================= -->
+  <section class="hero">
+    <div class="hero__inner">
+      <p class="hero__kicker">WebMCP consent · attack surface · fix</p>
+      <h2 class="hero__title">A consent dialog <em>can lie</em>.</h2>
+      <p class="hero__subtitle">
+        SafeGuard registers tools through <code>document.modelContext</code>, breaks the
+        consent dialog with four real attacks, then fixes it with a Human Mandate that
+        verifies what a tool <em>does</em> — never what it <em>says</em>.
+      </p>
+      <div class="hero__flow" aria-label="Intent to Authority to Effect">
+        <div class="flow-node">
+          <span class="flow-node__step">Intent</span>
+          <span class="flow-node__sub">the human grants bounded authority up-front</span>
+        </div>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-node">
+          <span class="flow-node__step">Authority</span>
+          <span class="flow-node__sub">the mandate checks every runtime effect</span>
+        </div>
+        <span class="flow-arrow" aria-hidden="true">→</span>
+        <div class="flow-node">
+          <span class="flow-node__step">Effect</span>
+          <span class="flow-node__sub">state mutates only within bounds</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <main class="layout">
     <!-- ============================================================= -->
@@ -258,7 +299,7 @@
   <!-- ============================================================= -->
   <section class="log" aria-labelledby="log-title">
     <div class="log__header">
-      <h2 id="log-title" class="log__title">Test panel — intent · consent · effect</h2>
+      <h2 id="log-title" class="log__title">Audit trail — intent · consent · effect</h2>
       <button id="log-clear" class="btn btn--ghost btn--sm">Clear log</button>
     </div>
     <div class="log__table-wrap">
