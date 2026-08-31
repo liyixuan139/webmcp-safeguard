@@ -212,10 +212,11 @@ The four required deliverables and where each lives:
 
 1. **Working live URL** — deploy the site to Netlify (below); it is a static
    site and needs no backend.
-2. **Text description** — see `SUBMISSION.md`.
+2. **Text description** — see `SUBMISSION.md`; `DEVPOST.md` has paste-ready
+   copy for the challenge form.
 3. **Demo video** — a < 3 min YouTube video (with audio) showing the "Run full
    demo" flow and, ideally, an agent driving the tools inside ChatGPT's
-   in-app browser.
+   in-app browser. `VIDEO-SCRIPT.md` has the narration, timed to the demo.
 4. **Public code repository** — this repo, MIT-licensed (`LICENSE`).
 
 ### Deploy to Netlify
