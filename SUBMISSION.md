@@ -25,15 +25,33 @@ tool call is checked against its *runtime effect primitive* — never the tool's
 `description` or `name` — before it mutates state. A violating call is refused
 silently, with no consent dialog left to fool.
 
-## Why this belongs on WebMCP
+## Why this belongs on WebMCP — not any ordinary web app
 
-WebMCP gives pages a new power — structured tools an agent can call — and a new
-attack surface: the consent dialog. The dialog renders a human-authored
-`description`, and a description can lie. This is a WebMCP-shaped problem in a
-way it isn't for ordinary web pages: the person isn't watching every call, so
-the gap between "what the dialog says" and "what the tool does" is exploitable
-at scale. SafeGuard demonstrates that gap concretely, and proposes a pattern
-(the mandate) to close it.
+SafeGuard's subject *is* WebMCP's consent surface. Each of the four attacks is a
+corruption of a WebMCP primitive, so the vulnerability cannot even be stated
+outside WebMCP:
+
+- **The consent prompt** — WebMCP is the first web API that turns a
+  page-authored `description` into a *browser-mediated consent dialog*. A
+  normal web page has no such dialog (the human just clicks), so there is no
+  prompt to lie. That prompt is the attack surface here.
+- **`readOnlyHint`** — a WebMCP annotation meant to reassure ("no changes");
+  the read-only lie shows that a field promising safety can itself be used to
+  attack.
+- **Runtime tool registration** — WebMCP tools can be re-registered, which is
+  exactly what makes tool substitution possible.
+
+It is also the challenge's own thesis: *an app that is better when a person and
+their agent use it together*. WebMCP splits a single action into a person
+(consent) and an agent (execution). SafeGuard is about the trust gap that split
+creates — and the mandate is a concrete proposal for closing it: the person
+grants bounded authority up-front (Intent), the agent acts inside it (Effect),
+and a standing check sits between them (Authority).
+
+The finding is a contribution to the standard, not just a toy. It argues the
+consent prompt should not rest on a human-authored `description` alone, and that
+runtime effect-checking belongs in the browser/agent layer — a design signal
+WebMCP's spec and implementers can act on.
 
 ## How it improves the experience
 
@@ -66,8 +84,7 @@ caught just like a blatant one.
 
 ## Demo
 
-Live URL: `https://<your-site>.netlify.app` (see README → "Submitting to the
-WebMCP Challenge").
+Live URL: <https://webmcp-safeguard.netlify.app>
 
 The header button **"▶ Run full demo"** plays the whole break-then-fix story in
 under a minute.

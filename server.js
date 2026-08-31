@@ -27,13 +27,21 @@ const MIME = {
 
 http
   .createServer((req, res) => {
-    let urlPath = decodeURIComponent(req.url.split('?')[0]);
+    let urlPath;
+    try {
+      urlPath = decodeURIComponent(req.url.split('?')[0]);
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Bad request');
+      return;
+    }
     if (urlPath === '/') urlPath = '/index.html';
 
-    const filePath = path.join(ROOT, urlPath);
-
-    // Guard against path traversal outside ROOT.
-    if (!filePath.startsWith(ROOT)) {
+    // Resolve against ROOT and require the result to stay inside it. Compare
+    // against `ROOT + path.sep` (not a bare startsWith), so a sibling directory
+    // like `D:\claude\SafeGuard2` can't pass a prefix check.
+    const filePath = path.resolve(ROOT, '.' + urlPath);
+    if (filePath !== ROOT && !filePath.startsWith(ROOT + path.sep)) {
       res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
       res.end('Forbidden');
       return;
