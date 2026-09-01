@@ -216,7 +216,7 @@ The four required deliverables and where each lives:
    copy for the challenge form.
 3. **Demo video** — a < 3 min YouTube video (with audio) showing the "Run full
    demo" flow and, ideally, an agent driving the tools inside ChatGPT's
-   in-app browser: <https://youtu.be/55NgUKPXYWI>. `VIDEO-SCRIPT.md` has the
+   in-app browser: <https://youtu.be/_jjylhOwYpA>. `VIDEO-SCRIPT.md` has the
    narration, timed to the demo.
 4. **Public code repository** — this repo, MIT-licensed (`LICENSE`).
 
