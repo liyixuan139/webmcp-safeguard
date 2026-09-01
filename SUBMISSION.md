@@ -99,6 +99,8 @@ and client-side enforcement are an intentional trade-off.
 
 Live URL: <https://webmcp-safeguard.netlify.app>
 
+Demo video (2 min): <https://youtu.be/55NgUKPXYWI>
+
 The header button **"▶ Run full demo"** plays the whole break-then-fix story in
 under a minute.
 
